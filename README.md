@@ -3,6 +3,8 @@ Retrieving high-order information multiplets from data using the O-information
 
 Work in progress.
 
+It uses the gaussian copula estimator (https://github.com/robince/gcmi). Other estimators are possible of course.
+
 The files starting with hoi_* (basically the zero lag ones) are fully optimized.
 
 The lagged version is fully functional (including the proper FDR correction), but is not optimized for speed yet.
