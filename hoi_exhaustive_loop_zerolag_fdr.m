@@ -1,4 +1,4 @@
-function Otot = hoi_exhaustive_loop_zerolag_fdr(ts, maxsize, n_best, biascorrection, pathTmp, isig, groups)
+function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag_fdr(ts, maxsize, n_best, biascorrection, pathTmp, isig, groups)
 
 % maxsize = max number of variables in the multiplet
 % n_best = number of most informative multiplets retained
@@ -19,7 +19,7 @@ nboot = 1000; % number of bootstrap samples
 alphaval = .05;
 Otot(maxsize) = struct('index_var_red', [], 'sorted_red', [], 'index_red', [], 'bootsig_red', [], ...
                        'index_var_syn', [], 'sorted_syn', [], 'index_syn', [], 'bootsig_syn', []);
-
+O_val_size_tot(maxsize)=struct('multiplet_value',[]);
 if nargin<7
     groups = ones(nvartot,1);
 end
@@ -45,7 +45,7 @@ for isize = 3:maxsize
             end
             
             ncomb = size(C,1);
-            Osize = zeros(ncomb,1);
+            O_val_size = zeros(ncomb,1);
             XX = covBootst(:,:,iboot);
 
             %----- for bias correction
@@ -62,14 +62,14 @@ for isize = 3:maxsize
             %------
             
             parfor icomb = 1:ncomb
-                Osize(icomb) = hoi_o_information_boot(XX,C(icomb,:),biascorrection,psiterms,dterm);
+                O_val_size(icomb) = hoi_o_information_boot(XX,C(icomb,:),biascorrection,psiterms,dterm);
             end
-            
-            % select best values
-            ind_pos = find(Osize > 0);
-            ind_neg = find(Osize < 0);
-            O_pos = Osize(Osize>0);
-            O_neg = Osize(Osize<0);
+            O_val_size_tot(isize).multiplet_val=O_val_size; % here we save all the values
+            % select n_best highest values
+            ind_pos = find(O_val_size > 0);
+            ind_neg = find(O_val_size < 0);
+            O_pos = O_val_size(O_val_size>0);
+            O_neg = O_val_size(O_val_size<0);
             [Osort_pos, ind_pos_sort] = sort(O_pos,'descend');
             [Osort_neg, ind_neg_sort] = sort(O_neg);
             if ~isempty(Osort_pos)
@@ -235,4 +235,6 @@ function z0 = fz0(bstat,stat) % from bootci function
     % Compute bias-correction constant z0
     z0 = norminv(mean(bsxfun(@lt,bstat,stat),1) + mean(bsxfun(@eq,bstat,stat),1)/2);
 end  
+
+
 
