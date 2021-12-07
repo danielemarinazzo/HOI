@@ -16,8 +16,10 @@ for isize=3:maxsize-1
             if sum(ismember(Otot(lower).index_var_red(ilower,:),Otot(lower+1).index_var_red(ihigher,:)))==lower
                 v1=Otot(lower).bootsigCI_red(ilower,:);
                 v2=Otot(lower+1).bootsigCI_red(ihigher,:);
-                [l,r]=RangeIntersection(v1(:,1),v1(:,2),v2(:,1),v2(:,2));
-                sig_red(ihigher)=~(~isempty(l)*~isempty(r));
+                l1=v1(1);l2=v2(1);r1=v1(2);r2=v2(2);
+                r = bsxfun(@min, r1, r2);
+                l = bsxfun(@max, l1, l2);
+                sig_red(ihigher)= l >= r;
             end
         end
     end
@@ -25,10 +27,10 @@ for isize=3:maxsize-1
     for ilower=1:nlower_syn
         for ihigher=1:nhigher_syn
             if sum(ismember(Otot(lower).index_var_syn(ilower,:),Otot(lower+1).index_var_syn(ihigher,:)))==lower
-                v1=Otot(lower).bootsigCI_syn(ilower,:);
-                v2=Otot(lower+1).bootsigCI_syn(ihigher,:);
-                [l,r]=RangeIntersection(v1(:,1),v1(:,2),v2(:,1),v2(:,2));
-                sig_syn(ihigher)=~(~isempty(l)*~isempty(r));
+                l1=v1(1);l2=v2(1);r1=v1(2);r2=v2(2);
+                r = bsxfun(@min, r1, r2);
+                l = bsxfun(@max, l1, l2);
+                sig_syn(ihigher)= l >= r;
             end
         end
     end
