@@ -1,11 +1,7 @@
-function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag_fdr(ts, maxsize, n_best, biascorrection, pathTmp, isig, groups)
+function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag_fdr(ts, maxsize, n_best, biascorrection, pathTmp, groups)
 
 % maxsize = max number of variables in the multiplet
 % n_best = number of most informative multiplets retained
-
-if nargin<6
-    isig = 0;
-end
 
 Xfull = copnorm(ts);
 
@@ -17,13 +13,13 @@ X = Xfull;
 
 nboot = 1000; % number of bootstrap samples
 alphaval = .05;
-Otot(maxsize) = struct('index_var_red', [], 'sorted_red', [], 'index_red', [], 'bootsig_red', [], ...
-                       'index_var_syn', [], 'sorted_syn', [], 'index_syn', [], 'bootsig_syn', []);
-O_val_size_tot(maxsize)=struct('multiplet_value',[]);
+Otot(maxsize) = struct('index_var_red', [], 'sorted_red', [], 'index_red', [], 'bootsig_red', [], 'bootsigCI_red', [],...
+    'index_var_syn', [], 'sorted_syn', [], 'index_syn', [], 'bootsig_syn', [], 'bootsigCI_syn', []);
+O_val_size_tot(maxsize) = struct('multiplet_value',[]);
 if nargin<7
     groups = ones(nvartot,1);
 end
-                   
+
 %% create data for CI estimation by Bootstrap
 
 [outBoot, outJack] = hoi_createBootsData(X,nboot,pathTmp);
@@ -47,14 +43,14 @@ for isize = 3:maxsize
             ncomb = size(C,1);
             O_val_size = zeros(ncomb,1);
             XX = covBootst(:,:,iboot);
-
+            
             %----- for bias correction
             if biascorrection
-                psiterms{1} = psi((N - (1:isize))/2) / 2; 
-                psiterms{2} = psi((N - (1:isize-1))/2) / 2; 
+                psiterms{1} = psi((N - (1:isize))/2) / 2;
+                psiterms{2} = psi((N - (1:isize-1))/2) / 2;
                 psiterms{3} = psi((N - (1))/2) / 2;
                 ln2 = log(2);
-                dterm = (ln2 - log(N-1)) / 2;  
+                dterm = (ln2 - log(N-1)) / 2;
             else
                 psiterms = cell(3,1);
                 dterm = [];
@@ -90,23 +86,23 @@ for isize = 3:maxsize
                 boolNeg = true;
             end
             % compute bootstrapped measure for CI estimation
-            if (boolPos || posNeg) && isLoadBoot==false 
+            if (boolPos || posNeg) && isLoadBoot==false
                 covJack = [];
                 load(outJack, 'covJack'); % variable: covJack
                 isLoadBoot = true;
             end
-            if boolPos 
+            if boolPos
                 for isel = 1:n_sel_pos
                     indvar = C(ind_pos(ind_pos_sort(isel)),:);
                     bstats_pos(iboot-1,isel) = hoi_o_information_boot(covBootst(:,:,iboot),indvar,...
-                                                                      biascorrection,psiterms,dterm);      
+                        biascorrection,psiterms,dterm);
                 end
             end
             if boolNeg
                 for isel = 1:n_sel_neg
                     indvar = C(ind_neg(ind_neg_sort(isel)),:);
                     bstats_neg(iboot-1,isel) = hoi_o_information_boot(covBootst(:,:,iboot),indvar,...
-                                                                      biascorrection,psiterms,dterm);      
+                        biascorrection,psiterms,dterm);
                 end
             end
         end
@@ -116,17 +112,18 @@ for isize = 3:maxsize
     
     %----- for bias correction\
     if biascorrection
-        psiterms{1} = psi((N - 1 - (1:isize))/2) / 2; 
-        psiterms{2} = psi((N -1 - (1:isize-1))/2) / 2; 
+        psiterms{1} = psi((N - 1 - (1:isize))/2) / 2;
+        psiterms{2} = psi((N -1 - (1:isize-1))/2) / 2;
         psiterms{3} = psi((N -1 - (1))/2) / 2;
-        dterm = (ln2 - log(N-2)) / 2; 
+        dterm = (ln2 - log(N-2)) / 2;
     else
         psiterms = cell(3,1);
         dterm = [];
     end
-    %----- 
+    %-----
     
-    if boolPos 
+    if boolPos
+        ci = zeros(n_sel_pos,2);
         for isel = 1:n_sel_pos
             
             indvar = C(ind_pos(ind_pos_sort(isel)),:);
@@ -139,9 +136,9 @@ for isize = 3:maxsize
             parfor i = 1:N
                 jstat(i) = hoi_o_information_boot(covJack(:,:,i),indvar,biascorrection,psiterms,dterm);
             end
-            ci = bootci_jack(N,jstat,alphaval,z_0,Osort_pos(isel),bstats_pos(:,isel));           
+            ci(isel,:) = bootci_jack(N,jstat,alphaval,z_0,Osort_pos(isel),bstats_pos(:,isel));
             
-            boot_sig_pos(isel) = ~((ci(1)<0) && (ci(2)>0));
+            boot_sig_pos(isel) = ~((ci(isel,1)<0) && (ci(isel,2)>0));
         end
         
         h = fdr_bh(p_pos);
@@ -149,8 +146,10 @@ for isize = 3:maxsize
         Otot(isize).sorted_red = Osort_pos(1:n_sel_pos);
         Otot(isize).index_red = ind_pos(ind_pos_sort(1:n_sel_pos));
         Otot(isize).bootsig_red = h.*boot_sig_pos;
+        Otot(isize).bootsigCI_red = ci;
     end
     if boolNeg
+        ci = zeros(n_sel_neg,2);
         for isel = 1:n_sel_neg
             
             indvar = C(ind_neg(ind_neg_sort(isel)),:);
@@ -163,78 +162,103 @@ for isize = 3:maxsize
             parfor i = 1:N
                 jstat(i) = hoi_o_information_boot(covJack(:,:,i),indvar,biascorrection,psiterms,dterm);
             end
-            ci = bootci_jack(N,jstat,alphaval,z_0,Osort_neg(isel),bstats_neg(:,isel));           
+            ci(isel,:) = bootci_jack(N,jstat,alphaval,z_0,Osort_neg(isel),bstats_neg(:,isel));
             
-            boot_sig_neg(isel) = ~((ci(1)<0) && (ci(2)>0));
+            boot_sig_neg(isel) = ~((ci(isel,1)<0) && (ci(isel,2)>0));
         end
+        
         h = fdr_bh(p_neg);
         Otot(isize).index_var_syn = C(ind_neg(ind_neg_sort(1:n_sel_neg)),:);
         Otot(isize).sorted_syn = Osort_neg(1:n_sel_neg);
         Otot(isize).index_syn = ind_neg(ind_neg_sort(1:n_sel_neg));
         Otot(isize).bootsig_syn = h.*boot_sig_neg;
+        Otot(isize).bootsigCI_syn = ci;
     end
 end
 
-if isig
-    for i = 1:maxsize
-        if ~isempty(Otot(i).bootsig_red)
-            Otot(i).index_var_red(Otot(i).bootsig_red==0,:)=[];
-            Otot(i).sorted_red(Otot(i).bootsig_red==0)=[];
-            Otot(i).index_red(Otot(i).bootsig_red==0)=[];
-            Otot(i).bootsig_red(Otot(i).bootsig_red==0)=[];          
-        end
-        if ~isempty(Otot(i).bootsig_syn)
-            Otot(i).index_var_syn(Otot(i).bootsig_syn==0,:)=[];
-            Otot(i).sorted_syn(Otot(i).bootsig_syn==0)=[];
-            Otot(i).index_syn(Otot(i).bootsig_syn==0)=[];
-            Otot(i).bootsig_syn(Otot(i).bootsig_syn==0)=[];          
-        end
+for i = 1:maxsize
+    if ~isempty(Otot(i).bootsig_red)
+        Otot(i).index_var_red(Otot(i).bootsig_red==0,:)=[];
+        Otot(i).sorted_red(Otot(i).bootsig_red==0)=[];
+        Otot(i).index_red(Otot(i).bootsig_red==0)=[];
+        Otot(i).bootsigCI_red(Otot(i).bootsig_red==0,:)=[];
+        Otot(i).bootsig_red(Otot(i).bootsig_red==0)=[];
     end
-end 
+    if ~isempty(Otot(i).bootsig_syn)
+        Otot(i).index_var_syn(Otot(i).bootsig_syn==0,:)=[];
+        Otot(i).sorted_syn(Otot(i).bootsig_syn==0)=[];
+        Otot(i).index_syn(Otot(i).bootsig_syn==0)=[];
+        Otot(i).bootsigCI_syn(Otot(i).bootsig_syn==0,:)=[];
+        Otot(i).bootsig_syn(Otot(i).bootsig_syn==0)=[];
+    end
+end
+% and now flag the multiplets which don't have a significant increase of
+% info with respect to their lower order composants
+Otot=find_carryover_significance(Otot);
+
+for i = 1:maxsize
+    if ~isempty(Otot(i).inc_sig_red)
+        Otot(i).index_var_red(Otot(i).inc_sig_red==0,:)=[];
+        Otot(i).sorted_red(Otot(i).inc_sig_red==0)=[];
+        Otot(i).index_red(Otot(i).inc_sig_red==0)=[];
+        Otot(i).bootsigCI_red(Otot(i).inc_sig_red==0,:)=[];
+        Otot(i).bootsig_red(Otot(i).inc_sig_red==0)=[];
+        Otot(i).inc_sig_red(Otot(i).inc_sig_red==0)=[];
+    end
+    if ~isempty(Otot(i).inc_sig_syn)
+        Otot(i).index_var_syn(Otot(i).inc_sig_syn==0,:)=[];
+        Otot(i).sorted_syn(Otot(i).inc_sig_syn==0)=[];
+        Otot(i).index_syn(Otot(i).inc_sig_syn==0)=[];
+        Otot(i).bootsigCI_syn(Otot(i).inc_sig_syn==0,:)=[];
+        Otot(i).bootsig_syn(Otot(i).inc_sig_syn==0)=[];
+        Otot(i).inc_sig_syn(Otot(i).inc_sig_syn==0)=[];
+    end
+end
+
 end
 
 %% internal functions
 
 function ci = bootci_jack(N,jstat,alpha,z_0,stat,bstat) % from bootci function
-    weights = repmat(1/N,N,1);
-    % acceleration finding, see DiCiccio and Efron (1996)
-    mjstat = sum(bsxfun(@times,jstat,weights),1); % mean along 1st dim.
-    score = bsxfun(@minus,mjstat,jstat); % score function at stat; ignore (N-1) factor because it cancels out in the skew
-    iszer = all(score==0,1);
-    skew = sum(bsxfun(@times,score.^3,weights),1) ./ ...
-        (sum(bsxfun(@times,score.^2,weights),1).^1.5) /sqrt(N); % skewness of the score function
-    skew(iszer) = 0;
-    acc = skew/6;  % acceleration
+weights = repmat(1/N,N,1);
+% acceleration finding, see DiCiccio and Efron (1996)
+mjstat = sum(bsxfun(@times,jstat,weights),1); % mean along 1st dim.
+score = bsxfun(@minus,mjstat,jstat); % score function at stat; ignore (N-1) factor because it cancels out in the skew
+iszer = all(score==0,1);
+skew = sum(bsxfun(@times,score.^3,weights),1) ./ ...
+    (sum(bsxfun(@times,score.^2,weights),1).^1.5) /sqrt(N); % skewness of the score function
+skew(iszer) = 0;
+acc = skew/6;  % acceleration
 
-    % transform back with bias corrected and acceleration
-    z_alpha1 = norminv(alpha/2);
-    z_alpha2 = -z_alpha1;
-    pct1 = 100*normcdf(z_0 +(z_0+z_alpha1)./(1-acc.*(z_0+z_alpha1)));
-    pct1(z_0==Inf) = 100;
-    pct1(z_0==-Inf) = 0;
-    pct2 = 100*normcdf(z_0 +(z_0+z_alpha2)./(1-acc.*(z_0+z_alpha2)));
-    pct2(z_0==Inf) = 100;
-    pct2(z_0==-Inf) = 0;
+% transform back with bias corrected and acceleration
+z_alpha1 = norminv(alpha/2);
+z_alpha2 = -z_alpha1;
+pct1 = 100*normcdf(z_0 +(z_0+z_alpha1)./(1-acc.*(z_0+z_alpha1)));
+pct1(z_0==Inf) = 100;
+pct1(z_0==-Inf) = 0;
+pct2 = 100*normcdf(z_0 +(z_0+z_alpha2)./(1-acc.*(z_0+z_alpha2)));
+pct2(z_0==Inf) = 100;
+pct2(z_0==-Inf) = 0;
 
-    % inverse of ECDF
-    m = numel(stat);
-    lower = zeros(1,m);
-    upper = zeros(1,m);
-    for i=1:m
-        lower(i) = prctile(bstat(:,i),pct2(i),1);
-        upper(i) = prctile(bstat(:,i),pct1(i),1);
-    end
+% inverse of ECDF
+m = numel(stat);
+lower = zeros(1,m);
+upper = zeros(1,m);
+for i=1:m
+    lower(i) = prctile(bstat(:,i),pct2(i),1);
+    upper(i) = prctile(bstat(:,i),pct1(i),1);
+end
 
-    % return
-    ci = sort([lower;upper],1);
+% return
+ci = sort([lower;upper],1);
 
 end
 
 % -------------------------
 function z0 = fz0(bstat,stat) % from bootci function
-    % Compute bias-correction constant z0
-    z0 = norminv(mean(bsxfun(@lt,bstat,stat),1) + mean(bsxfun(@eq,bstat,stat),1)/2);
-end  
+% Compute bias-correction constant z0
+z0 = norminv(mean(bsxfun(@lt,bstat,stat),1) + mean(bsxfun(@eq,bstat,stat),1)/2);
+end
 
 
 
