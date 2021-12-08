@@ -16,7 +16,7 @@ alphaval = .05;
 Otot(maxsize) = struct('index_var_red', [], 'sorted_red', [], 'index_red', [], 'bootsig_red', [], 'bootsigCI_red', [],...
     'index_var_syn', [], 'sorted_syn', [], 'index_syn', [], 'bootsig_syn', [], 'bootsigCI_syn', []);
 O_val_size_tot(maxsize) = struct('multiplet_value',[]);
-if nargin<7
+if nargin<6
     groups = ones(nvartot,1);
 end
 
