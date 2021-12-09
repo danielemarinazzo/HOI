@@ -1,6 +1,6 @@
 function Otot=find_carryover_significance(Otot)
 % this checks whether the increment of the O information going one order up
-% is significant with respect to the value at the lower order. Starting from the highest order otherwise it defeats the purpose
+% is significant with respect to the value at the lower order
 
 maxsize=length(Otot);
 for isize=maxsize:-1:4
@@ -27,6 +27,8 @@ for isize=maxsize:-1:4
     for ilower=1:nlower_syn
         for ihigher=1:nhigher_syn
             if sum(ismember(Otot(higher-1).index_var_syn(ilower,:),Otot(higher).index_var_syn(ihigher,:)))==higher-1
+                v1=Otot(higher-1).bootsigCI_syn(ilower,:);
+                v2=Otot(higher).bootsigCI_syn(ihigher,:);
                 l1=v1(1);l2=v2(1);r1=v1(2);r2=v2(2);
                 r = bsxfun(@min, r1, r2);
                 l = bsxfun(@max, l1, l2);
