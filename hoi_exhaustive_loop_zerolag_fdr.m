@@ -1,7 +1,11 @@
 function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag_fdr(ts, maxsize, n_best, biascorrection, pathTmp, groups)
 
+% ts= input (observations x variables), time series or static/behavioral data
 % maxsize = max number of variables in the multiplet
-% n_best = number of most informative multiplets retained
+% n_best = number of most informative multiplets retained for statistical test
+% biascorrection: apply or not bias correction for entropy calculation
+% pathTmp: directory where to save the covariance matrix for the bootstrap
+% groups: if you want to constrain the search to multiplets of variables belonging to different groups, provide a vector of length equal to the number of variables, whose entries are the group assignment of each variable
 
 Xfull = copnorm(ts);
 
