@@ -180,42 +180,42 @@ for isize = 3:maxsize
     end
 end
 
-for i = 1:maxsize
-    if ~isempty(Otot(i).bootsig_red)
-        Otot(i).index_var_red(Otot(i).bootsig_red==0,:)=[];
-        Otot(i).sorted_red(Otot(i).bootsig_red==0)=[];
-        Otot(i).index_red(Otot(i).bootsig_red==0)=[];
-        Otot(i).bootsigCI_red(Otot(i).bootsig_red==0,:)=[];
-        Otot(i).bootsig_red(Otot(i).bootsig_red==0)=[];
+for isize = 1:maxsize
+    if ~isempty(Otot(isize).bootsig_red)
+        Otot(isize).index_var_red(Otot(isize).bootsig_red==0,:)=[];
+        Otot(isize).sorted_red(Otot(isize).bootsig_red==0)=[];
+        Otot(isize).index_red(Otot(isize).bootsig_red==0)=[];
+        Otot(isize).bootsigCI_red(Otot(isize).bootsig_red==0,:)=[];
+        Otot(isize).bootsig_red(Otot(isize).bootsig_red==0)=[];
     end
-    if ~isempty(Otot(i).bootsig_syn)
-        Otot(i).index_var_syn(Otot(i).bootsig_syn==0,:)=[];
-        Otot(i).sorted_syn(Otot(i).bootsig_syn==0)=[];
-        Otot(i).index_syn(Otot(i).bootsig_syn==0)=[];
-        Otot(i).bootsigCI_syn(Otot(i).bootsig_syn==0,:)=[];
-        Otot(i).bootsig_syn(Otot(i).bootsig_syn==0)=[];
+    if ~isempty(Otot(isize).bootsig_syn)
+        Otot(isize).index_var_syn(Otot(isize).bootsig_syn==0,:)=[];
+        Otot(isize).sorted_syn(Otot(isize).bootsig_syn==0)=[];
+        Otot(isize).index_syn(Otot(isize).bootsig_syn==0)=[];
+        Otot(isize).bootsigCI_syn(Otot(isize).bootsig_syn==0,:)=[];
+        Otot(isize).bootsig_syn(Otot(isize).bootsig_syn==0)=[];
     end
 end
 % and now flag the multiplets which don't have a significant increase of
 % info with respect to their lower order composants
-Otot=find_carryover_significance(Otot);
+Otot=find_carryover_significance_zerolag(Otot);
 
-for i = 1:maxsize
-    if ~isempty(Otot(i).inc_sig_red)
-        Otot(i).index_var_red(Otot(i).inc_sig_red==0,:)=[];
-        Otot(i).sorted_red(Otot(i).inc_sig_red==0)=[];
-        Otot(i).index_red(Otot(i).inc_sig_red==0)=[];
-        Otot(i).bootsigCI_red(Otot(i).inc_sig_red==0,:)=[];
-        Otot(i).bootsig_red(Otot(i).inc_sig_red==0)=[];
-        Otot(i).inc_sig_red(Otot(i).inc_sig_red==0)=[];
+for isize = 1:maxsize
+    if ~isempty(Otot(isize).inc_sig_red)
+        Otot(isize).index_var_red(Otot(isize).inc_sig_red==0,:)=[];
+        Otot(isize).sorted_red(Otot(isize).inc_sig_red==0)=[];
+        Otot(isize).index_red(Otot(isize).inc_sig_red==0)=[];
+        Otot(isize).bootsigCI_red(Otot(isize).inc_sig_red==0,:)=[];
+        Otot(isize).bootsig_red(Otot(isize).inc_sig_red==0)=[];
+        Otot(isize).inc_sig_red(Otot(isize).inc_sig_red==0)=[];
     end
-    if ~isempty(Otot(i).inc_sig_syn)
-        Otot(i).index_var_syn(Otot(i).inc_sig_syn==0,:)=[];
-        Otot(i).sorted_syn(Otot(i).inc_sig_syn==0)=[];
-        Otot(i).index_syn(Otot(i).inc_sig_syn==0)=[];
-        Otot(i).bootsigCI_syn(Otot(i).inc_sig_syn==0,:)=[];
-        Otot(i).bootsig_syn(Otot(i).inc_sig_syn==0)=[];
-        Otot(i).inc_sig_syn(Otot(i).inc_sig_syn==0)=[];
+    if ~isempty(Otot(isize).inc_sig_syn)
+        Otot(isize).index_var_syn(Otot(isize).inc_sig_syn==0,:)=[];
+        Otot(isize).sorted_syn(Otot(isize).inc_sig_syn==0)=[];
+        Otot(isize).index_syn(Otot(isize).inc_sig_syn==0)=[];
+        Otot(isize).bootsigCI_syn(Otot(isize).inc_sig_syn==0,:)=[];
+        Otot(isize).bootsig_syn(Otot(isize).inc_sig_syn==0)=[];
+        Otot(isize).inc_sig_syn(Otot(isize).inc_sig_syn==0)=[];
     end
 end
 
