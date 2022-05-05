@@ -18,7 +18,7 @@ for isize=3:maxsize
     for ibest=1:length(nbest_tot)
         nbest=nbest_tot(ibest);
         if(max(Cpos>0))
-            xcut_pos=edgespos(length(Cpos)-find(Cpos<=nbest, 1, 'last' ));
+            xcut_pos=edgespos(max(1,(length(Cpos)-find(Cpos<=nbest, 1, 'last' ))));
             subplot(2,1,1);hold on;
             pred(ibest+1)=line([xcut_pos xcut_pos]+mean(diff(edgespos))/2,[0 max(Npos)],'color',mycol(ibest,:),'LineWidth',2);
         end
