@@ -1,3 +1,7 @@
+function plot_hist_nbest(O_val_size_tot)
+% this function plots an histogram of the values of all the multiplets,
+% together with indicators for different values of nbest (the multiplets
+% retained for further statistical test
 maxsize=length(O_val_size_tot);
 nbest_tot=[20 50 100 300 500];
 mycol=parula(length(nbest_tot));
