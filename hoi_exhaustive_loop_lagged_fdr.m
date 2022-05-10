@@ -195,15 +195,15 @@ for itarget = 1:nvartot
             Otot_lagged(itarget,isize).index_var_red(Otot_lagged(itarget,isize).bootsig_red==0,:)=[];
             Otot_lagged(itarget,isize).sorted_red(Otot_lagged(itarget,isize).bootsig_red==0)=[];
             Otot_lagged(itarget,isize).index_red(Otot_lagged(itarget,isize).bootsig_red==0)=[];
+            Otot_lagged(itarget,isize).bootsigCI_red(Otot_lagged(itarget,isize).bootsig_red==0,:)=[];
             Otot_lagged(itarget,isize).bootsig_red(Otot_lagged(itarget,isize).bootsig_red==0)=[];
-            Otot_lagged(itarget,isize).bootsigCI_red(Otot_lagged(itarget,isize).bootsig_red==0)=[];
         end
         if ~isempty(Otot_lagged(itarget,isize).bootsig_syn)
             Otot_lagged(itarget,isize).index_var_syn(Otot_lagged(itarget,isize).bootsig_syn==0,:)=[];
             Otot_lagged(itarget,isize).sorted_syn(Otot_lagged(itarget,isize).bootsig_syn==0)=[];
             Otot_lagged(itarget,isize).index_syn(Otot_lagged(itarget,isize).bootsig_syn==0)=[];
+            Otot_lagged(itarget,isize).bootsigCI_syn(Otot_lagged(itarget,isize).bootsig_syn==0,:)=[];
             Otot_lagged(itarget,isize).bootsig_syn(Otot_lagged(itarget,isize).bootsig_syn==0)=[];
-            Otot_lagged(itarget,isize).bootsigCI_syn(Otot_lagged(itarget,isize).bootsig_syn==0)=[];
         end
     end
 end
