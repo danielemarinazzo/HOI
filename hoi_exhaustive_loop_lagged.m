@@ -1,4 +1,4 @@
-function [Otot_lagged, O_val_size_tot_lagged] = hoi_exhaustive_loop_lagged_fdr(ts, modelorder, maxsize, n_best, biascorrection, pathTmp, groups)
+function [Otot_lagged, O_val_size_tot_lagged] = hoi_exhaustive_loop_lagged(ts, modelorder, maxsize, n_best, biascorrection, pathTmp, groups)
 
 % maxsize = max number of drivers in the multiplet (i.e. size 2 means a
 % multipet of 3 variables, the target and two drivers). This is different

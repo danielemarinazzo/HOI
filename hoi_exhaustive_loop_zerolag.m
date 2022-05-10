@@ -1,4 +1,4 @@
-function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag_fdr(ts, maxsize, n_best, biascorrection, pathTmp, groups)
+function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag(ts, maxsize, n_best, biascorrection, pathTmp, groups)
 
 % ts= input (observations x variables), time series or static/behavioral data
 % maxsize = max number of variables in the multiplet
