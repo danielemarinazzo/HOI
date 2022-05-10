@@ -7,8 +7,8 @@ It uses the gaussian copula estimator (https://github.com/robince/gcmi). Other e
 
 The main files are
 
-*hoi_exhaustive_loop_zerolag.m
-*hoi_exhaustive_loop_lagged.m
+* hoi_exhaustive_loop_zerolag.m
+* hoi_exhaustive_loop_lagged.m
 
 which find the significant redundant and synergistic multiplets up to the desired order.
 
