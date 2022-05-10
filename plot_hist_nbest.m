@@ -34,4 +34,5 @@ for isize=3:maxsize
     end
     subplot(2,1,1);title('redundancy');legend(pred(2:length(nbest_tot)+1),nbest_label)
     subplot(2,1,2);title('synergy');legend(psyn(2:length(nbest_tot)+1),nbest_label)
+    suptitle(['size ' num2str(isize)])
 end
