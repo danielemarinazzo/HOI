@@ -5,16 +5,18 @@ Work in progress.
 
 It uses the gaussian copula estimator (https://github.com/robince/gcmi). Other estimators are possible of course (at the moment the fast bootstrap works for the gaussian copula/covariance based ones).
 
-The files starting with hoi_* (basically the zero lag ones) are fully optimized.
+The main files are
 
-The lagged version is fully functional (including the proper FDR correction), but is not optimized for speed yet.
+*hoi_exhaustive_loop_zerolag.m
+*hoi_exhaustive_loop_lagged.m
 
-The python version https://github.com/PranavMahajan25/HOI_toolbox does not contain neither FDR correction, nor speed-up with bootstrap. The equivalent matlab files in this repo are the ones starting with old_* which in turn use o_information_boot.m and o_information_lagged_boot.m (this latter is still the current one for the lagged version).
+which find the significant redundant and synergistic multiplets up to the desired order.
 
-# Tentative todo list
+The python version https://github.com/PranavMahajan25/HOI_toolbox does not contain neither FDR correction, nor sped-up bootstrap. 
+
+Tentative todo list
 
 * update the python repo
-* optimize the lagged version
 * plotting (already started by @renzocom)
 * currently we select the first nbest multiplets. I suspect that this number (a couple of dozens) is very small compared to the whole set of significant multiplets, given the nmber of combinations, so we should actually wnantify how many multiplets are in the tail of the distribution, and fix nbest accordingly (the execution time scales linearly). Update 02.12.2021 I have modified the main function to save all the values, and added the plot_hist_nbest.m function to visualize these numbers.
 
