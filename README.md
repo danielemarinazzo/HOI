@@ -1,5 +1,5 @@
 # HOI
-Retrieving high-order information multiplets from data using the O-information
+Retrieving high-order information multiplets from data using the O-information. The zero lag version works both for time series and for data collected across multiple subjects/trials.
 
 Work in progress.
 
