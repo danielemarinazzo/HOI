@@ -1,4 +1,4 @@
-function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag(ts, maxsize, n_best, biascorrection, pathTmp, groups)
+function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag(ts, maxsize, n_best, biascorrection, groups)
 
 % ts= input (observations x variables), time series or static/behavioral data
 % maxsize = max number of variables in the multiplet
@@ -8,7 +8,7 @@ function [Otot, O_val_size_tot] = hoi_exhaustive_loop_zerolag(ts, maxsize, n_bes
 % groups: if you want to constrain the search to multiplets of variables belonging to different groups, provide a vector of length equal to the number of variables, whose entries are the group assignment of each variable
 
 Xfull = copnorm(ts);
-
+pathTmp=pwd;
 %% Parameters
 
 % matrix size
@@ -20,7 +20,7 @@ alphaval = .05;
 Otot(maxsize) = struct('index_var_red', [], 'sorted_red', [], 'index_red', [], 'bootsig_red', [], 'bootsigCI_red', [],...
     'index_var_syn', [], 'sorted_syn', [], 'index_syn', [], 'bootsig_syn', [], 'bootsigCI_syn', []);
 O_val_size_tot(maxsize) = struct('multiplet_value',[]);
-if nargin<6
+if nargin<5
     groups = ones(nvartot,1);
 end
 
@@ -170,7 +170,6 @@ for isize = 3:maxsize
             
             boot_sig_neg(isel) = ~((ci(isel,1)<0) && (ci(isel,2)>0));
         end
-        
         h = fdr_bh(p_neg);
         Otot(isize).index_var_syn = C(ind_neg(ind_neg_sort(1:n_sel_neg)),:);
         Otot(isize).sorted_syn = Osort_neg(1:n_sel_neg);
