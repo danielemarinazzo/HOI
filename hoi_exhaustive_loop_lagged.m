@@ -1,4 +1,4 @@
-function [Otot_lagged, O_val_size_tot_lagged] = hoi_exhaustive_loop_lagged(ts, modelorder, maxsize, n_best, biascorrection, pathTmp, groups)
+function [Otot_lagged, O_val_size_tot_lagged] = hoi_exhaustive_loop_lagged(ts, modelorder, maxsize, n_best, biascorrection, groups)
 
 % maxsize = max number of drivers in the multiplet (i.e. size 2 means a
 % multipet of 3 variables, the target and two drivers). This is different
@@ -7,7 +7,7 @@ function [Otot_lagged, O_val_size_tot_lagged] = hoi_exhaustive_loop_lagged(ts, m
 
 
 Xfull = copnorm(ts);
-
+pathTmp=pwd;
 %% Parameters
 
 % matrix size
@@ -21,7 +21,7 @@ Otot_lagged(nvartot,maxsize) = struct('index_var_red', [], 'sorted_red', [], 'in
     'index_var_syn', [], 'sorted_syn', [], 'index_syn', [], 'bootsig_syn', [], 'bootsigCI_syn', []);
 O_val_size_tot_lagged(nvartot,maxsize) = struct('multiplet_value',[]);
 
-if nargin<7
+if nargin<6
     groups = ones(nvartot,1);
 end
 
