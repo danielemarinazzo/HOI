@@ -95,7 +95,7 @@ for itarget = 1:nvartot
                     boolNeg = true;
                 end
                 % compute bootstrapped measure for CI estimation
-                if (boolPos || posNeg) && isLoadBoot==false
+                if (boolPos || boolNeg) && isLoadBoot==false
                     covJack = [];
                     load(outJack, 'covJack'); % variable: covJack
                     isLoadBoot = true;
