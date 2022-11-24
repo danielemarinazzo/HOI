@@ -212,7 +212,7 @@ end
 % info with respect to their lower order composants
 Otot_lagged = find_carryover_significance_lagged(Otot_lagged);
 for itarget = 1:nvartot
-    for isize = 1:maxsize
+    for isize = 4:maxsize
         if ~isempty(Otot_lagged(isize).inc_sig_red)
             Otot_lagged(itarget,isize).index_var_red(Otot_lagged(isize).inc_sig_red==0,:)=[];
             Otot_lagged(itarget,isize).sorted_red(Otot_lagged(isize).inc_sig_red==0)=[];
