@@ -9,6 +9,9 @@ function [outBoot, outJack] = hoi_createBootsData(X,nboot,pathOut)
             idx = 1:n;
         else
             idx = randsample(n,n,1); 
+            % if the statistics toolbox is not installed use
+            % tmp = 1:n;
+            % idx = tmp(randi(n, k))   %select SIZE elements WITH REPETITION
         end
         Xb = X(idx,:);
         covBootst(:,:,i) = cov(Xb);
