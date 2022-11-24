@@ -232,7 +232,7 @@ end
 % info with respect to their lower order composants
 Otot=find_carryover_significance_zerolag(Otot);
 
-for isize = 1:maxsize
+for isize = 4:maxsize
     if ~isempty(Otot(isize).inc_sig_red)
         Otot(isize).index_var_red(Otot(isize).inc_sig_red==0,:)=[];
         Otot(isize).sorted_red(Otot(isize).inc_sig_red==0)=[];
