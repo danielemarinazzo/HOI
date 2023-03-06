@@ -3,7 +3,7 @@ Retrieving high-order information multiplets from data using the O-information. 
 
 Work in progress.
 
-It uses the gaussian copula estimator (https://github.com/robince/gcmi). Other estimators are possible of course (at the moment the fast bootstrap works for the gaussian copula/covariance based ones).
+It uses the gaussian normalization presented in Robin Ince's repository for gaussian copula mutual information (https://github.com/robince/gcmi). Other estimators are possible of course (at the moment the fast bootstrap works for the covariance based ones).
 
 The main files are
 
