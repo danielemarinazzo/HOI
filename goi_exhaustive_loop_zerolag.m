@@ -60,7 +60,7 @@ for isize = 1:maxorder
             end
             %------
             
-           for icomb = 1:ncomb
+           parfor icomb = 1:ncomb
                 c = C(icomb,:);
                 if biascorrection
                     psitermsP = psiterms;
