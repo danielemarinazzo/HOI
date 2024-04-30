@@ -137,7 +137,7 @@ for isize = 3:maxsize
             indvar = C(ind_pos(ind_pos_sort(isel)),:);
             
             for iboot=1:nboot
-                bstats_pos(iboot,1) = hoi_o_information_boot(covBootst(:,:,iboot),indvar,...
+                bstats_pos(iboot,1) = hoi_o_information_boot(covBootst(:,:,iboot+1),indvar,...
                     biascorrection,psiterms,dterm);
             end
             
@@ -179,7 +179,7 @@ for isize = 3:maxsize
             indvar = C(ind_neg(ind_neg_sort(isel)),:);
             
             for iboot=1:nboot
-                bstats_neg(iboot,1) = hoi_o_information_boot(covBootst(:,:,iboot),indvar,...
+                bstats_neg(iboot,1) = hoi_o_information_boot(covBootst(:,:,iboot+1),indvar,...
                     biascorrection,psiterms,dterm);
             end
             

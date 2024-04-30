@@ -120,7 +120,7 @@ for itarget = 1:nvartot
                 indvar = C(ind_pos(ind_pos_sort(isel)),:);
                 
                 for iboot=1:nboot
-                    bstats_pos(iboot) = hoi_o_information_lagged_boot(covBootst(:,:,iboot),itarget, indvar,...
+                    bstats_pos(iboot) = hoi_o_information_lagged_boot(covBootst(:,:,iboot+1),itarget, indvar,...
                         modelorder, biascorrection,psiterms,dterm);
                 end
                 
@@ -164,7 +164,7 @@ for itarget = 1:nvartot
                 indvar = C(ind_neg(ind_neg_sort(isel)),:);
                 
                  for iboot=1:nboot
-                        bstats_neg(iboot) = hoi_o_information_lagged_boot(covBootst(:,:,iboot),itarget, indvar,...
+                        bstats_neg(iboot) = hoi_o_information_lagged_boot(covBootst(:,:,iboot+1),itarget, indvar,...
                             modelorder, biascorrection,psiterms,dterm);
                  end
                  
